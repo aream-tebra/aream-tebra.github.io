@@ -1,0 +1,56 @@
+<html>
+<body>
+    <p>This NPI generator was created based on the requirements <a href="https://www.cms.gov/Regulations-and-Guidance/Administrative-Simplification/NationalProvIdentStand/Downloads/NPIcheckdigit.pdf">here</a>.</p>
+    <label for='num'>9 digit number starting with 1 or 2</label>
+    <input type='text' id='num' />
+    <button onclick="generateNpi()">Generate NPI</button>
+    <div>
+        <span>NPI: </span><span id='npi'></span>
+    </div>
+
+    <script>
+        function generateNpi() {
+            let num = document.getElementById('num').value;
+            let checksum = generateChecksum(num);
+            document.getElementById('npi').innerHTML = (num + checksum);
+        }
+
+        function generateChecksum(num) {
+            let sum = 24;
+            for (let i = 0; i < num.length; i++) {
+                let val = parseInt(num[i]);
+                if (i % 2 == 0) {
+                    switch (val) {
+                        case 5:
+                            val = 1;
+                            break;
+                        case 6:
+                            val = 3;
+                            break;
+                        case 7:
+                            val = 5;
+                            break;
+                        case 8:
+                            val = 7;
+                            break;
+                        case 9:
+                            val = 9;
+                            break;
+                        default:
+                            val *= 2;
+                    }
+                }
+                sum += val;
+            }
+
+            let mod = sum % 10;
+            if (mod == 0) {
+                return 0;
+            }
+
+            return 10 - mod;
+        }
+    </script>
+</body>
+
+</html>
